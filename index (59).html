@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Namma Area Job</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@500;600;700&display=swap');
+
+  :root{
+    --bg: #F7F4EC;
+    --surface: #FFFFFF;
+    --line: #E4DFD1;
+    --ink: #1E2A2A;
+    --muted: #626b62;
+    --teal: #1B4B43;
+    --teal-dark: #123530;
+    --marigold: #E8A33D;
+    --save: #C74B4B;
+    --whatsapp: #1E8A5F;
+    --focus: #1666C1;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{ margin: 0; }
+
+  #jb-root{
+    font-family: 'Inter', 'Noto Sans Tamil', sans-serif;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 20px 16px 96px;
+  }
+
+  [lang-tag]{ font-family: 'Inter', 'Noto Sans Tamil', sans-serif; }
+
+  /* Visible focus ring everywhere, for keyboard & accessibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+
+  .jb-topbar{
+    max-width: 1000px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .jb-header{ flex: 1; min-width: 0; }
+
+  .jb-title{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: clamp(24px, 5.5vw, 32px);
+    color: var(--teal-dark);
+    margin: 0;
+  }
+  .jb-title span{ color: var(--marigold); }
+
+  .jb-sub{
+    font-size: 15px;
+    color: var(--muted);
+    margin: 6px 0 0;
+    line-height: 1.4;
+  }
+
+  .jb-lang-toggle{
+    flex: 0 0 auto;
+    display: flex;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .jb-lang-btn{
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    min-height: 36px;
+  }
+  .jb-lang-btn.active{
+    background: var(--teal-dark);
+    color: white;
+  }
+
+  .jb-location-pill{
+    margin-top: 10px;
+    background: var(--surface);
+    border: 1.5px solid var(--teal-dark);
+    color: var(--teal-dark);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    min-height: 38px;
+  }
+
+  .jb-loc-lang-row{ display: flex; align-items: center; gap: 10px; }
+  .jb-lang-toggle-mobile{ display: none; }
+
+  .jb-sticky{
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    max-width: 1000px;
+    margin: 0 auto 18px;
+    padding: 10px 0 6px;
+    background: linear-gradient(var(--bg) 80%, transparent);
+  }
+
+  .jb-search-wrap{ position: relative; max-width: 460px; margin: 0 auto 10px; }
+  .jb-search-icon{
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--muted); pointer-events: none;
+  }
+  .jb-search{
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    font-size: 16px;
+    background: var(--surface);
+    outline: none;
+    min-height: 46px;
+    color: var(--ink);
+  }
+  .jb-search:focus{ border-color: var(--focus); }
+
+  .jb-chips{
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    max-width: 720px;
+    margin: 0 auto 10px;
+    padding: 2px 4px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  .jb-chips::-webkit-scrollbar{ display: none; }
+  .jb-chip{
+    flex: 0 0 auto;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    color: var(--teal-dark);
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 9px 15px;
+    border-radius: 999px;
+    cursor: pointer;
+    min-height: 40px;
+  }
+  .jb-chip.active{ background: var(--teal-dark); border-color: var(--teal-dark); color: white; }
+
+  .jb-count{ display: block; font-size: 13px; color: var(--muted); font-weight: 500; text-align: center; }
+
+  .jb-ptr-indicator{
+    display: flex; align-items: center; justify-content: center;
+    height: 0; overflow: hidden; color: var(--teal-dark);
+    font-size: 13.5px; font-weight: 600; transition: height 0.15s ease;
+    max-width: 1000px; margin: 0 auto;
+  }
+  .jb-ptr-indicator.jb-ptr-active{ height: 42px; }
+  .jb-ptr-spinner{
+    width: 16px; height: 16px; border: 2px solid var(--line);
+    border-top-color: var(--teal-dark); border-radius: 50%; margin-right: 8px;
+    animation: jb-spin 0.7s linear infinite;
+  }
+  @keyframes jb-spin{ to{ transform: rotate(360deg); } }
+
+  .jb-grid{
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .jb-card{
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .jb-card-top{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .jb-cat-tag{
+    font-weight: 700;
+    font-size: 11.5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    flex: 0 0 auto;
+  }
+
+  .jb-bookmark{
+    margin-left: auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 17px;
+    flex: 0 0 auto;
+  }
+  .jb-bookmark.jb-saved{ color: var(--save); border-color: var(--save); }
+  .jb-bookmark:not(.jb-saved){ color: #b9ad91; }
+
+  .jb-img{
+    width: 100%; height: 150px; object-fit: cover;
+    border-radius: 8px; margin-bottom: 10px; background: #ded2b3; display: block;
+  }
+  .jb-imgplaceholder{
+    width: 100%; height: 150px; border-radius: 8px; margin-bottom: 10px;
+    background: #eee6d3; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: var(--muted);
+  }
+
+  .jb-role{ font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 17px; color: var(--teal-dark); margin: 0 0 3px; line-height: 1.3; }
+  .jb-shop{ font-size: 14px; font-weight: 600; color: var(--muted); margin: 0 0 8px; }
+  .jb-desc{ font-size: 14px; color: var(--ink); line-height: 1.5; margin: 0 0 10px; white-space: pre-wrap; }
+
+  .jb-meta{ display: flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); margin-bottom: 4px; }
+
+  .jb-card-actions{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .jb-contact{
+    font-size: 14px; font-weight: 700; color: white; text-decoration: none;
+    background: var(--teal); padding: 11px 10px; border-radius: 8px; border: none;
+    cursor: pointer; text-align: center; min-height: 44px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .jb-contact.jb-whatsapp{ background: var(--whatsapp); grid-column: 1 / -1; }
+  .jb-contact.jb-call-btn{ background: transparent; color: var(--teal); border: 1.5px solid var(--teal); }
+  .jb-contact.jb-copy-btn{ background: transparent; color: var(--teal-dark); border: 1.5px solid var(--line); }
+  .jb-contact.jb-copy-btn.jb-copied{ background: var(--teal-dark); color: white; border-color: var(--teal-dark); }
+  .jb-contact.jb-share-btn{ background: transparent; color: var(--muted); border: 1.5px solid var(--line); }
+
+  .jb-fab{
+    position: fixed; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); right: 20px;
+    width: 58px; height: 58px; padding: 0;
+    background: var(--marigold); color: var(--teal-dark); border: none; border-radius: 50%;
+    font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 30px; line-height: 1;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25); z-index: 50;
+  }
+  .jb-fab:active{ transform: scale(0.94); }
+  .jb-fab span{ margin-top: -2px; }
+
+  .jb-empty{ max-width: 460px; margin: 60px auto; text-align: center; color: var(--muted); font-size: 15px; }
+  .jb-empty-icon{ font-size: 40px; margin-bottom: 10px; }
+  .jb-empty-postbtn{
+    margin-top: 14px; display: inline-block; background: var(--teal); color: white;
+    font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 14px; padding: 12px 20px;
+    border-radius: 8px; border: none; cursor: pointer; min-height: 46px;
+  }
+
+  .jb-skel-grid{
+    max-width: 1000px; margin: 0 auto; display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;
+  }
+  .jb-skel-card{ background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius); padding: 14px; }
+  .jb-skel-img{ width: 100%; height: 150px; border-radius: 8px; margin-bottom: 10px; }
+  .jb-skel-line{ height: 12px; border-radius: 4px; margin-bottom: 8px; }
+  .jb-skel-img, .jb-skel-line{
+    background: linear-gradient(90deg, #ece6d5 25%, #f5f0e2 37%, #ece6d5 63%);
+    background-size: 400% 100%; animation: jb-shimmer 1.4s ease infinite;
+  }
+  @keyframes jb-shimmer{ 0%{ background-position: 100% 50%; } 100%{ background-position: 0 50%; } }
+
+  .jb-loading{ text-align: center; padding: 60px 0; color: var(--muted); font-size: 15px; }
+
+  .jb-overlay{
+    position: fixed; inset: 0; background: rgba(18,53,48,0.5); display: flex;
+    align-items: center; justify-content: center; z-index: 100; padding: 16px;
+  }
+  .jb-modal{
+    background: var(--surface); border-radius: 16px; width: 100%; max-width: 460px;
+    max-height: 90vh; overflow-y: auto; padding: 24px 20px 22px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+  .jb-modal h2{ font-family: 'Poppins', sans-serif; font-size: 21px; color: var(--teal-dark); margin: 0 0 4px; }
+  .jb-modal .jb-modal-sub{ font-size: 13px; color: var(--muted); margin: 0 0 18px; }
+
+  .jb-field{ margin-bottom: 14px; }
+  .jb-row{ display: flex; gap: 12px; }
+  .jb-row .jb-field{ flex: 1; min-width: 0; }
+  .jb-optional{ font-weight: 400; color: var(--muted); }
+  .jb-field label{ display: block; font-size: 13.5px; font-weight: 600; color: var(--teal-dark); margin-bottom: 5px; }
+  .jb-field input[type=text], .jb-field input[type=tel], .jb-field textarea, .jb-field select{
+    width: 100%; padding: 12px; border-radius: 8px; border: 1.5px solid var(--line);
+    font-size: 16px; background: var(--surface); outline: none; color: var(--ink); min-height: 46px;
+  }
+  .jb-field input:focus, .jb-field textarea:focus, .jb-field select:focus{ border-color: var(--focus); }
+  .jb-field textarea{ resize: vertical; min-height: 70px; }
+
+  .jb-photo-btns{ display: flex; gap: 10px; }
+  .jb-photo-btn{
+    flex: 1; border: 1.5px dashed var(--line); border-radius: 8px; padding: 14px 8px;
+    text-align: center; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--teal-dark);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    min-height: 68px; background: var(--bg);
+  }
+  .jb-photo-btn:active{ border-color: var(--teal); background: var(--surface); }
+  .jb-photo-btn-icon{ font-size: 22px; }
+  .jb-photo-btn input{ position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+  .jb-preview{ width: 100%; height: 130px; object-fit: cover; border-radius: 8px; margin-top: 8px; }
+
+  .jb-modal-actions{ display: flex; gap: 10px; margin-top: 18px; }
+  .jb-btn{ flex: 1; padding: 13px; border-radius: 8px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; border: none; cursor: pointer; min-height: 48px; }
+  .jb-btn-cancel{ background: var(--bg); color: var(--ink); border: 1.5px solid var(--line); }
+  .jb-btn-submit{ background: var(--teal); color: white; }
+  .jb-btn-submit:disabled{ opacity: 0.6; cursor: not-allowed; }
+
+  .jb-error{ background: #fdecec; color: var(--save); font-size: 13.5px; padding: 10px 12px; border-radius: 8px; margin-bottom: 12px; }
+
+  @media (max-width: 600px){
+    .jb-header{ text-align: center; }
+    .jb-lang-toggle-desktop{ display: none; }
+    .jb-loc-lang-row{ justify-content: center; margin-top: 10px; }
+    .jb-loc-lang-row .jb-location-pill{ margin-top: 0; }
+    .jb-lang-toggle-mobile{ display: flex; flex: 0 0 auto; margin-left: 0; }
+    .jb-search-wrap{ max-width: none; }
+    .jb-grid, .jb-skel-grid{ grid-template-columns: 1fr; }
+    .jb-overlay{ align-items: center; padding: 16px; }
+    .jb-modal{ max-width: 420px; width: 100%; max-height: 88vh; border-radius: 16px; padding: 20px 16px 24px; }
+    .jb-row{ flex-direction: column; gap: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="jb-overlay" id="jb-location-overlay" style="display:flex;">
+  <div class="jb-modal" style="text-align:center;">
+    <div style="font-size:34px;margin-bottom:4px;">📍</div>
+    <h2 data-t="locTitle">Which area are you in?</h2>
+    <p class="jb-modal-sub" data-t="locSub">This helps show you jobs near you first. You can change it anytime.</p>
+    <div class="jb-field">
+      <input type="text" id="f-user-location" data-t-placeholder="locPlaceholder" placeholder="e.g. Velachery, Anna Nagar, T Nagar..." autofocus style="text-align:center;" />
+    </div>
+    <div class="jb-modal-actions">
+      <button type="button" class="jb-btn jb-btn-cancel" id="jb-location-skip" data-t="locSkip">Skip, show all</button>
+      <button type="button" class="jb-btn jb-btn-submit" id="jb-location-go" data-t="locGo">Show jobs</button>
+    </div>
+  </div>
+</div>
+
+<div id="jb-root">
+  <div class="jb-topbar">
+    <div class="jb-header">
+      <h1 class="jb-title" data-t="title">Namma Area <span>Job</span></h1>
+      <p class="jb-sub" data-t="subtitle">Local shops post openings. Anyone can pin a job or come find one. Posts auto-remove after 7 days.</p>
+      <div class="jb-loc-lang-row">
+        <button class="jb-location-pill" id="jb-location-pill" style="display:none;"></button>
+        <div class="jb-lang-toggle jb-lang-toggle-mobile" role="group" aria-label="Language">
+          <button class="jb-lang-btn active" data-lang="en">English</button>
+          <button class="jb-lang-btn" data-lang="ta">தமிழ்</button>
+        </div>
+      </div>
+    </div>
+    <div class="jb-lang-toggle jb-lang-toggle-desktop" role="group" aria-label="Language">
+      <button class="jb-lang-btn active" data-lang="en">English</button>
+      <button class="jb-lang-btn" data-lang="ta">தமிழ்</button>
+    </div>
+  </div>
+
+  <div class="jb-sticky">
+    <div class="jb-search-wrap">
+      <svg class="jb-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="jb-search" id="jb-search" type="text" data-t-placeholder="searchPlaceholder" placeholder="Search area or role..." />
+    </div>
+    <div class="jb-chips" id="jb-chips">
+      <button class="jb-chip active" data-cat="All" data-t="chipAll">All</button>
+      <button class="jb-chip" data-cat="Saved" data-t="chipSaved">★ Saved</button>
+      <button class="jb-chip" data-cat="Retail" data-t="chipRetail">Retail</button>
+      <button class="jb-chip" data-cat="Delivery" data-t="chipDelivery">Delivery</button>
+      <button class="jb-chip" data-cat="Kitchen" data-t="chipKitchen">Kitchen</button>
+      <button class="jb-chip" data-cat="Cleaning" data-t="chipCleaning">Cleaning</button>
+      <button class="jb-chip" data-cat="Office" data-t="chipOffice">Office</button>
+      <button class="jb-chip" data-cat="Other" data-t="chipOther">Other</button>
+    </div>
+    <span class="jb-count" id="jb-count"></span>
+  </div>
+
+  <div class="jb-ptr-indicator" id="jb-ptr-indicator"><span class="jb-ptr-spinner"></span><span id="jb-ptr-text" data-t="refreshing">Refreshing…</span></div>
+
+  <div id="jb-content">
+    <div class="jb-loading" data-t="loading">Loading job board…</div>
+  </div>
+</div>
+
+<button class="jb-fab" id="jb-open-modal" aria-label="Post a job" data-t-aria="postJobAria"><span aria-hidden="true">+</span></button>
+
+<div class="jb-overlay" id="jb-overlay" style="display:none;">
+  <div class="jb-modal">
+    <h2 data-t="postTitle">Post a job</h2>
+    <p class="jb-modal-sub" data-t="postSub">This will be visible to everyone who opens this board.</p>
+    <div id="jb-form-error"></div>
+    <form id="jb-form">
+      <div class="jb-field">
+        <label data-t="fShop">Shop / business name</label>
+        <input type="text" id="f-shop" maxlength="80" data-t-placeholder="fShopPh" placeholder="e.g. Sri Ram Supermarket" required />
+      </div>
+      <div class="jb-field">
+        <label data-t="fRole">Job title</label>
+        <input type="text" id="f-role" maxlength="80" data-t-placeholder="fRolePh" placeholder="e.g. Cashier, Helper, Delivery boy" required />
+      </div>
+      <div class="jb-field">
+        <label data-t="fCategory">Category</label>
+        <select id="f-category">
+          <option value="Retail" data-t="chipRetail">Retail</option>
+          <option value="Delivery" data-t="chipDelivery">Delivery</option>
+          <option value="Kitchen" data-t="chipKitchen">Kitchen</option>
+          <option value="Cleaning" data-t="chipCleaning">Cleaning</option>
+          <option value="Office" data-t="chipOffice">Office</option>
+          <option value="Other" data-t="chipOther">Other</option>
+        </select>
+      </div>
+      <div class="jb-row">
+        <div class="jb-field">
+          <label><span data-t="fSalary">Salary</span> <span class="jb-optional">(<span data-t="optional">optional</span>)</span></label>
+          <input type="text" id="f-salary" maxlength="40" data-t-placeholder="fSalaryPh" placeholder="e.g. ₹12,000/month" />
+        </div>
+        <div class="jb-field">
+          <label><span data-t="fJobType">Job type</span> <span class="jb-optional">(<span data-t="optional">optional</span>)</span></label>
+          <select id="f-jobtype">
+            <option value="" data-t="notSpecified">Not specified</option>
+            <option value="Full-time" data-t="fullTime">Full-time</option>
+            <option value="Part-time" data-t="partTime">Part-time</option>
+            <option value="Contract" data-t="contract">Contract</option>
+          </select>
+        </div>
+      </div>
+      <div class="jb-field">
+        <label><span data-t="fDesc">Description</span> <span class="jb-optional">(<span data-t="optional">optional</span>)</span></label>
+        <textarea id="f-desc" maxlength="500" data-t-placeholder="fDescPh" placeholder="Timing, experience needed, anything else worth mentioning..."></textarea>
+      </div>
+      <div class="jb-field">
+        <label data-t="fLocation">Location / area</label>
+        <input type="text" id="f-location" maxlength="80" data-t-placeholder="fLocationPh" placeholder="e.g. Velachery, Chennai" required />
+      </div>
+      <div class="jb-field">
+        <label data-t="fContact">Contact number</label>
+        <input type="tel" id="f-contact" inputmode="numeric" pattern="[0-9]*" maxlength="15" data-t-placeholder="fContactPh" placeholder="e.g. 98765 43210" required />
+      </div>
+      <div class="jb-field">
+        <label data-t="fPhoto">Photo (shop front or similar)</label>
+        <div class="jb-photo-btns">
+          <label class="jb-photo-btn" for="f-image-camera">
+            <span class="jb-photo-btn-icon">📷</span>
+            <span data-t="takePhoto">Take Photo</span>
+            <input type="file" id="f-image-camera" accept="image/*" capture="environment" />
+          </label>
+          <label class="jb-photo-btn" for="f-image-gallery">
+            <span class="jb-photo-btn-icon">🖼️</span>
+            <span data-t="chooseGallery">Choose from Gallery</span>
+            <input type="file" id="f-image-gallery" accept="image/*" />
+          </label>
+        </div>
+        <img id="jb-preview-img" class="jb-preview" style="display:none;" />
+      </div>
+      <div class="jb-modal-actions">
+        <button type="button" class="jb-btn jb-btn-cancel" id="jb-cancel" data-t="cancel">Cancel</button>
+        <button type="submit" class="jb-btn jb-btn-submit" id="jb-submit" data-t="postJobBtn">Post job</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  const SUPABASE_URL = 'https://ltxpifavwbejpbedpgro.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0eHBpZmF2d2JlanBiZWRwZ3JvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxMjc0NTEsImV4cCI6MjA5ODcwMzQ1MX0._HdCCS2AGOjcCe1peNm63Se4yQzJaqlw3FaAGXYF1a8';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const IMAGE_BUCKET = 'job-photos';
+  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+
+  // ---- Simple bilingual dictionary (English / Tamil) ----
+  const STRINGS = {
+    en: {
+      title: 'Namma Area <span>Job</span>',
+      subtitle: 'Local shops post openings. Anyone can pin a job or come find one. Posts auto-remove after 7 days.',
+      locTitle: 'Which area are you in?',
+      locSub: 'This helps show you jobs near you first. You can change it anytime.',
+      locPlaceholder: 'e.g. Velachery, Anna Nagar, T Nagar...',
+      locSkip: 'Skip, show all',
+      locGo: 'Show jobs',
+      searchPlaceholder: 'Search area or role...',
+      chipAll: 'All', chipSaved: '★ Saved', chipRetail: 'Retail', chipDelivery: 'Delivery',
+      chipKitchen: 'Kitchen', chipCleaning: 'Cleaning', chipOffice: 'Office', chipOther: 'Other',
+      refreshing: 'Refreshing…', loading: 'Loading job board…', postJob: '+ Post a Job', postJobAria: 'Post a job',
+      postTitle: 'Post a job', postSub: 'This will be visible to everyone who opens this board.',
+      fShop: 'Shop / business name', fShopPh: 'e.g. Sri Ram Supermarket',
+      fRole: 'Job title', fRolePh: 'e.g. Cashier, Helper, Delivery boy',
+      fCategory: 'Category', fSalary: 'Salary', fSalaryPh: 'e.g. ₹12,000/month',
+      fJobType: 'Job type', notSpecified: 'Not specified', fullTime: 'Full-time', partTime: 'Part-time', contract: 'Contract',
+      fDesc: 'Description', fDescPh: 'Timing, experience needed, anything else worth mentioning...',
+      fLocation: 'Location / area', fLocationPh: 'e.g. Velachery, Chennai',
+      fContact: 'Contact number', fContactPh: 'e.g. 98765 43210',
+      fPhoto: 'Photo (shop front or similar)', uploadTap: 'Tap to upload an image', uploadChange: 'Tap to change image',
+      takePhoto: 'Take Photo', chooseGallery: 'Choose from Gallery',
+      cancel: 'Cancel', postJobBtn: 'Post job', optional: 'optional',
+      call: 'Call', whatsapp: 'WhatsApp', copy: 'Copy #', copied: 'Copied!', share: 'Share',
+      jobsPostedOne: ' job posted', jobsPostedMany: ' jobs posted',
+      emptyNoSaved: "You haven't saved any jobs yet. Tap the ★ on a card to shortlist it.",
+      emptyNone: 'No jobs posted yet. Be the first shop to pin one!',
+      emptyNoMatch: 'No jobs match that search. Try a different area or role.',
+      errFill: 'Please fill in shop name, job title, location and contact number.',
+      errPost: 'Could not post the job. Please try again.',
+      errLoad: 'Could not connect to the job board. Please check back in a moment.',
+      posting: 'Posting…',
+      pullToRefresh: 'Pull to refresh', releaseToRefresh: 'Release to refresh',
+      justNow: 'just now', minAgo: 'm ago', hrAgo: 'h ago', dayAgo: 'd ago',
+      changeLoc: ' · change'
+    },
+    ta: {
+      title: 'நம்ம ஏரியா <span>ஜாப்</span>',
+      subtitle: 'உள்ளூர் கடைகள் வேலை காலியிடங்களை இடுகின்றன. யார் வேண்டுமானாலும் ஒரு வேலையை இடலாம் அல்லது தேடலாம். இடுகைகள் 7 நாட்களுக்குப் பிறகு தானாக அகற்றப்படும்.',
+      locTitle: 'நீங்கள் எந்த பகுதியில் இருக்கிறீர்கள்?',
+      locSub: 'இது உங்களுக்கு அருகிலுள்ள வேலைகளை முதலில் காட்ட உதவும். எப்போது வேண்டுமானாலும் மாற்றலாம்.',
+      locPlaceholder: 'உதா. வேளச்சேரி, அண்ணா நகர், டி நகர்...',
+      locSkip: 'தவிர்க்க, அனைத்தையும் காட்டு',
+      locGo: 'வேலைகளைக் காட்டு',
+      searchPlaceholder: 'பகுதி அல்லது வேலையைத் தேடுங்கள்...',
+      chipAll: 'அனைத்தும்', chipSaved: '★ சேமித்தவை', chipRetail: 'சில்லறை', chipDelivery: 'டெலிவரி',
+      chipKitchen: 'சமையலறை', chipCleaning: 'சுத்தம் செய்தல்', chipOffice: 'அலுவலகம்', chipOther: 'மற்றவை',
+      refreshing: 'புதுப்பிக்கிறது…', loading: 'வேலை பலகை ஏற்றப்படுகிறது…', postJob: '+ வேலை இடுங்கள்', postJobAria: 'வேலை இடுங்கள்',
+      postTitle: 'ஒரு வேலையை இடுங்கள்', postSub: 'இந்த பலகையைத் திறக்கும் அனைவருக்கும் இது தெரியும்.',
+      fShop: 'கடை / வணிகப் பெயர்', fShopPh: 'உதா. ஸ்ரீ ராம் சூப்பர் மார்க்கெட்',
+      fRole: 'வேலை பெயர்', fRolePh: 'உதா. கேஷியர், உதவியாளர், டெலிவரி பாய்',
+      fCategory: 'வகை', fSalary: 'சம்பளம்', fSalaryPh: 'உதா. ₹12,000/மாதம்',
+      fJobType: 'வேலை வகை', notSpecified: 'குறிப்பிடவில்லை', fullTime: 'முழு நேரம்', partTime: 'பகுதி நேரம்', contract: 'ஒப்பந்தம்',
+      fDesc: 'விவரம்', fDescPh: 'நேரம், தேவையான அனுபவம், மற்றும் குறிப்பிடத்தக்கவை...',
+      fLocation: 'இடம் / பகுதி', fLocationPh: 'உதா. வேளச்சேரி, சென்னை',
+      fContact: 'தொடர்பு எண்', fContactPh: 'உதா. 98765 43210',
+      fPhoto: 'புகைப்படம் (கடையின் முன்பக்கம் அல்லது அது போன்றவை)', uploadTap: 'படத்தை பதிவேற்ற தட்டவும்', uploadChange: 'படத்தை மாற்ற தட்டவும்',
+      takePhoto: 'புகைப்படம் எடு', chooseGallery: 'கேலரியிலிருந்து தேர்வு செய்',
+      cancel: 'ரத்து செய்', postJobBtn: 'வேலையை இடு', optional: 'விருப்பத்தேர்வு',
+      call: 'அழை', whatsapp: 'வாட்ஸ்அப்', copy: 'எண்ணை நகலெடு', copied: 'நகலெடுக்கப்பட்டது!', share: 'பகிர்',
+      jobsPostedOne: ' வேலை இடப்பட்டது', jobsPostedMany: ' வேலைகள் இடப்பட்டன',
+      emptyNoSaved: 'நீங்கள் இன்னும் எந்த வேலையையும் சேமிக்கவில்லை. ஷார்ட்லிஸ்ட் செய்ய கார்டில் உள்ள ★ஐ தட்டவும்.',
+      emptyNone: 'இன்னும் வேலைகள் இடப்படவில்லை. முதலில் இடும் கடையாக இருங்கள்!',
+      emptyNoMatch: 'அந்தத் தேடலுக்குப் பொருந்தும் வேலைகள் இல்லை. வேறு பகுதி அல்லது வேலையை முயற்சிக்கவும்.',
+      errFill: 'தயவுசெய்து கடை பெயர், வேலை பெயர், இடம் மற்றும் தொடர்பு எண்ணை நிரப்பவும்.',
+      errPost: 'வேலையை இட முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
+      errLoad: 'வேலை பலகையுடன் இணைக்க முடியவில்லை. சிறிது நேரத்தில் மீண்டும் பாருங்கள்.',
+      posting: 'இடப்படுகிறது…',
+      pullToRefresh: 'புதுப்பிக்க இழுக்கவும்', releaseToRefresh: 'புதுப்பிக்க விடவும்',
+      justNow: 'இப்போதுதான்', minAgo: ' நிமிடம் முன்பு', hrAgo: ' மணி நேரம் முன்பு', dayAgo: ' நாள் முன்பு',
+      changeLoc: ' · மாற்று'
+    }
+  };
+  let lang = (localStorage.getItem('nammaAreaJob.lang') || 'en');
+  function t(key){ return (STRINGS[lang] && STRINGS[lang][key] != null) ? STRINGS[lang][key] : STRINGS.en[key] || key; }
+
+  function applyStaticText(){
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-t]').forEach(el => {
+      const key = el.getAttribute('data-t');
+      el.innerHTML = t(key);
+    });
+    document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-t-placeholder');
+      el.setAttribute('placeholder', t(key));
+    });
+    document.querySelectorAll('[data-t-aria]').forEach(el => {
+      const key = el.getAttribute('data-t-aria');
+      el.setAttribute('aria-label', t(key));
+    });
+    document.querySelectorAll('.jb-lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+  }
+
+  let jobs = [];
+  let pendingImageBlob = null;
+  let activeCategory = 'All';
+  let userLocation = '';
+
+  // ---- Saved / bookmarked jobs (stored locally on this device) ----
+  const SAVED_KEY = 'nammaAreaJob.savedIds';
+  function getSavedIds(){
+    try{ return new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || '[]')); }
+    catch(e){ return new Set(); }
+  }
+  function setSavedIds(set){
+    try{ localStorage.setItem(SAVED_KEY, JSON.stringify([...set])); }
+    catch(e){ /* storage unavailable, ignore */ }
+  }
+  function toggleSaved(id){
+    const set = getSavedIds();
+    if (set.has(String(id))) set.delete(String(id));
+    else set.add(String(id));
+    setSavedIds(set);
+    return set;
+  }
+
+  function skeletonHtml(count){
+    let out = '<div class="jb-skel-grid">';
+    for (let i = 0; i < count; i++){
+      out += `<div class="jb-skel-card">
+        <div class="jb-skel-img"></div>
+        <div class="jb-skel-line" style="width:70%"></div>
+        <div class="jb-skel-line" style="width:45%"></div>
+        <div class="jb-skel-line" style="width:90%"></div>
+        <div class="jb-skel-line" style="width:60%"></div>
+      </div>`;
+    }
+    out += '</div>';
+    return out;
+  }
+
+  const locationOverlay = document.getElementById('jb-location-overlay');
+  const locationInput = document.getElementById('f-user-location');
+  const locationPill = document.getElementById('jb-location-pill');
+
+  const contentEl = document.getElementById('jb-content');
+  const countEl = document.getElementById('jb-count');
+  const searchEl = document.getElementById('jb-search');
+  const chipsEl = document.getElementById('jb-chips');
+  const overlay = document.getElementById('jb-overlay');
+  const form = document.getElementById('jb-form');
+  const formError = document.getElementById('jb-form-error');
+  const submitBtn = document.getElementById('jb-submit');
+
+  document.querySelectorAll('.jb-lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      lang = btn.dataset.lang;
+      try{ localStorage.setItem('nammaAreaJob.lang', lang); }catch(e){}
+      applyStaticText();
+      render();
+    });
+  });
+
+  chipsEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('.jb-chip');
+    if (!btn) return;
+    activeCategory = btn.dataset.cat;
+    [...chipsEl.querySelectorAll('.jb-chip')].forEach(c => c.classList.toggle('active', c === btn));
+    render();
+  });
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.innerText = str;
+    return d.innerHTML;
+  }
+
+  function timeAgo(ts){
+    const diff = Date.now() - ts;
+    const mins = Math.floor(diff/60000);
+    if (mins < 1) return t('justNow');
+    if (mins < 60) return mins + t('minAgo');
+    const hrs = Math.floor(mins/60);
+    if (hrs < 24) return hrs + t('hrAgo');
+    const days = Math.floor(hrs/24);
+    return days + t('dayAgo');
+  }
+
+  async function loadJobs(isRefresh){
+    if (!isRefresh) contentEl.innerHTML = skeletonHtml(4);
+    const cutoffIso = new Date(Date.now() - SEVEN_DAYS_MS).toISOString();
+
+    // Note: expired-post cleanup should run server-side (e.g. a scheduled pg_cron job
+    // using the service_role key), not from visitors' browsers. Giving anonymous
+    // clients DELETE access on this table would let anyone wipe the whole board.
+    // The line below only *hides* posts older than 7 days from this device's view.
+
+    try{
+      const { data, error } = await sb
+        .from('jobs')
+        .select('*')
+        .gte('created_at', cutoffIso)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      jobs = (data || []).map(row => ({
+        id: row.id,
+        shop: row.shop,
+        role: row.role,
+        desc: row.description,
+        location: row.location,
+        contact: row.contact,
+        image: row.image,
+        category: row.category || 'Other',
+        salary: row.salary || '',
+        jobType: row.job_type || '',
+        ts: new Date(row.created_at).getTime()
+      }));
+    }catch(e){
+      console.error('Failed to load jobs', e);
+      contentEl.innerHTML = `<div class="jb-empty">${t('errLoad')}</div>`;
+      return;
+    }
+
+    render();
+  }
+
+  async function insertJob(job){
+    const { error } = await sb.from('jobs').insert([{
+      shop: job.shop,
+      role: job.role,
+      description: job.desc,
+      location: job.location,
+      contact: job.contact,
+      image: job.image,
+      category: job.category,
+      salary: job.salary,
+      job_type: job.jobType
+    }]);
+    if (error) throw error;
+  }
+
+  function render(){
+    const q = searchEl.value.trim().toLowerCase();
+    const savedIds = getSavedIds();
+    const filtered = jobs.filter(j => {
+      if (activeCategory === 'Saved'){
+        if (!savedIds.has(String(j.id))) return false;
+      } else if (activeCategory !== 'All' && j.category !== activeCategory){
+        return false;
+      }
+      if (!q) return true;
+      return (j.location + ' ' + j.role + ' ' + j.shop).toLowerCase().includes(q);
+    }).sort((a,b) => b.ts - a.ts);
+
+    countEl.textContent = filtered.length + (filtered.length === 1 ? t('jobsPostedOne') : t('jobsPostedMany'));
+
+    if (filtered.length === 0){
+      let message;
+      if (activeCategory === 'Saved'){
+        message = t('emptyNoSaved');
+      } else if (jobs.length === 0){
+        message = t('emptyNone');
+      } else {
+        message = t('emptyNoMatch');
+      }
+      contentEl.innerHTML = `
+        <div class="jb-empty">
+          <div class="jb-empty-icon">📌</div>
+          ${message}
+          ${activeCategory !== 'Saved' ? `<div><button class="jb-empty-postbtn" id="jb-empty-post">${t('postJob')}</button></div>` : ''}
+        </div>`;
+      const emptyBtn = document.getElementById('jb-empty-post');
+      if (emptyBtn) emptyBtn.addEventListener('click', openModal);
+      return;
+    }
+
+    contentEl.innerHTML = `<div class="jb-grid">${filtered.map(cardHtml).join('')}</div>`;
+  }
+
+  const CATEGORY_COLORS = {
+    Retail: '#E8A33D', Delivery: '#4A90A4', Kitchen: '#C74B4B',
+    Cleaning: '#6B8E4E', Office: '#1B4B43', Other: '#8a7f6a'
+  };
+  const CATEGORY_LABEL_KEYS = {
+    Retail: 'chipRetail', Delivery: 'chipDelivery', Kitchen: 'chipKitchen',
+    Cleaning: 'chipCleaning', Office: 'chipOffice', Other: 'chipOther'
+  };
+
+  function safeImageSrc(url){
+    if (typeof url !== 'string') return '';
+    const trimmed = url.trim();
+    // Legacy rows from before the Storage migration may still have raw data URIs
+    if (/^data:image\/(jpeg|png|webp);base64,/i.test(trimmed)) return trimmed;
+    // Otherwise only trust https URLs served from our own Supabase project
+    try{
+      const u = new URL(trimmed);
+      const supabaseHost = new URL(SUPABASE_URL).host;
+      if (u.protocol === 'https:' && u.host === supabaseHost) return escapeHtml(trimmed);
+    }catch(e){ /* not a valid absolute URL */ }
+    return '';
+  }
+
+  function cardHtml(j){
+    const safeImg = safeImageSrc(j.image);
+    const imgBlock = safeImg
+      ? `<img class="jb-img" src="${safeImg}" alt="${escapeHtml(j.shop)}" loading="lazy" />`
+      : `<div class="jb-imgplaceholder">${escapeHtml(j.shop)}</div>`;
+    const catColor = CATEGORY_COLORS[j.category] || CATEGORY_COLORS.Other;
+    const catLabel = t(CATEGORY_LABEL_KEYS[j.category] || 'chipOther');
+    const waNumber = (j.contact || '').replace(/\D/g, '');
+    const waText = encodeURIComponent(`Hi, I saw the ${j.role} opening at ${j.shop} on Namma Area Job. Is it still available?`);
+    const isSaved = getSavedIds().has(String(j.id));
+    return `
+      <div class="jb-card">
+        <div class="jb-card-top">
+          <span class="jb-cat-tag" style="background:${catColor}">${escapeHtml(catLabel)}</span>
+          <button class="jb-bookmark ${isSaved ? 'jb-saved' : ''}" data-id="${j.id}" aria-label="Save job">${isSaved ? '★' : '☆'}</button>
+        </div>
+        ${imgBlock}
+        <p class="jb-role">${escapeHtml(j.role)}</p>
+        <p class="jb-shop">${escapeHtml(j.shop)}</p>
+        ${j.desc ? `<p class="jb-desc">${escapeHtml(j.desc)}</p>` : ''}
+        ${(j.salary || j.jobType) ? `<div class="jb-meta">💰 ${escapeHtml([j.salary, j.jobType].filter(Boolean).join(' · '))}</div>` : ''}
+        <div class="jb-meta">📍 ${escapeHtml(j.location)}</div>
+        <div class="jb-meta">🕒 ${timeAgo(j.ts)}</div>
+        <div class="jb-card-actions">
+          ${waNumber ? `<a class="jb-contact jb-whatsapp" href="https://wa.me/91${waNumber}?text=${waText}" target="_blank" rel="noopener">${t('whatsapp')}</a>` : ''}
+          <a class="jb-contact jb-call-btn" href="tel:${escapeHtml(j.contact)}">${t('call')}</a>
+          <button class="jb-contact jb-copy-btn" data-copy="${escapeHtml(j.contact)}">${t('copy')}</button>
+          <button class="jb-contact jb-share-btn" data-id="${j.id}">${t('share')}</button>
+        </div>
+      </div>`;
+  }
+
+  function resizeImage(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxW = 480;
+          const scale = Math.min(1, maxW / img.width);
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob((blob) => {
+            if (!blob){ reject(new Error('Could not process image')); return; }
+            resolve({ blob, previewUrl: canvas.toDataURL('image/jpeg', 0.7) });
+          }, 'image/jpeg', 0.7);
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function makeImagePath(){
+    const id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    return `${id}.jpg`;
+  }
+
+  async function uploadJobImage(blob){
+    const path = makeImagePath();
+    const { error: uploadError } = await sb.storage
+      .from(IMAGE_BUCKET)
+      .upload(path, blob, { contentType: 'image/jpeg', cacheControl: '3600', upsert: false });
+    if (uploadError) throw uploadError;
+    const { data } = sb.storage.from(IMAGE_BUCKET).getPublicUrl(path);
+    return data.publicUrl;
+  }
+
+  async function handleImageInput(e){
+    const file = e.target.files[0];
+    if (!file) return;
+    try{
+      const { blob, previewUrl } = await resizeImage(file);
+      pendingImageBlob = blob;
+      const previewEl = document.getElementById('jb-preview-img');
+      previewEl.src = previewUrl;
+      previewEl.style.display = 'block';
+    }catch(err){
+      formError.innerHTML = `<div class="jb-error">Could not read that image. Try another file.</div>`;
+    }
+  }
+  document.getElementById('f-image-camera').addEventListener('change', handleImageInput);
+  document.getElementById('f-image-gallery').addEventListener('change', handleImageInput);
+
+  function openModal(){
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    form.reset();
+    pendingImageBlob = null;
+    formError.innerHTML = '';
+    document.getElementById('jb-preview-img').style.display = 'none';
+  }
+  function closeModal(){
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('jb-open-modal').addEventListener('click', openModal);
+  document.getElementById('jb-cancel').addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    formError.innerHTML = '';
+
+    const shop = document.getElementById('f-shop').value.trim();
+    const role = document.getElementById('f-role').value.trim();
+    const category = document.getElementById('f-category').value;
+    const salary = document.getElementById('f-salary').value.trim();
+    const jobType = document.getElementById('f-jobtype').value;
+    const desc = document.getElementById('f-desc').value.trim();
+    const location = document.getElementById('f-location').value.trim();
+    const contact = document.getElementById('f-contact').value.trim();
+
+    if (!shop || !role || !location || !contact){
+      formError.innerHTML = `<div class="jb-error">${t('errFill')}</div>`;
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = t('posting');
+
+    try{
+      let imageUrl = '';
+      if (pendingImageBlob){
+        imageUrl = await uploadJobImage(pendingImageBlob);
+      }
+      await insertJob({ shop, role, category, salary, jobType, desc, location, contact, image: imageUrl });
+      await loadJobs();
+      closeModal();
+    }catch(err){
+      formError.innerHTML = `<div class="jb-error">${t('errPost')}</div>`;
+      console.error(err);
+    }
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = t('postJobBtn');
+  });
+
+  searchEl.addEventListener('input', render);
+
+  contentEl.addEventListener('click', async (e) => {
+    const shareBtn = e.target.closest('.jb-share-btn');
+    const bookmarkBtn = e.target.closest('.jb-bookmark');
+    const copyBtn = e.target.closest('.jb-copy-btn');
+
+    if (bookmarkBtn){
+      toggleSaved(bookmarkBtn.dataset.id);
+      const nowSaved = bookmarkBtn.classList.toggle('jb-saved');
+      bookmarkBtn.textContent = nowSaved ? '★' : '☆';
+      if (activeCategory === 'Saved') render();
+      return;
+    }
+
+    if (copyBtn){
+      try{
+        await navigator.clipboard.writeText(copyBtn.dataset.copy || '');
+        const original = copyBtn.textContent;
+        copyBtn.textContent = t('copied');
+        copyBtn.classList.add('jb-copied');
+        setTimeout(() => { copyBtn.textContent = original; copyBtn.classList.remove('jb-copied'); }, 1500);
+      }catch(e){
+        console.warn('Clipboard not available', e);
+      }
+      return;
+    }
+
+    if (shareBtn){
+      const job = jobs.find(j => String(j.id) === shareBtn.dataset.id);
+      if (!job) return;
+      const text = `${job.role} at ${job.shop} — ${job.location}. Contact: ${job.contact} (via Namma Area Job)`;
+      let handled = false;
+
+      if (navigator.share){
+        let filesToShare = [];
+        if (job.image && navigator.canShare){
+          try{
+            const res = await fetch(job.image);
+            const blob = await res.blob();
+            const file = new File([blob], 'job.jpg', { type: blob.type || 'image/jpeg' });
+            if (navigator.canShare({ files: [file] })) filesToShare = [file];
+          }catch(e){ /* image couldn't be attached, share text only */ }
+        }
+        try{
+          await navigator.share(filesToShare.length ? { text, files: filesToShare } : { text });
+          handled = true;
+        }catch(e){
+          // user cancelled the native share sheet — don't fall through to WhatsApp
+          handled = true;
+        }
+      }
+
+      if (!handled){
+        // No native share sheet available (e.g. desktop browser): open WhatsApp directly
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+      }
+    }
+  });
+
+  function applyUserLocation(loc){
+    userLocation = loc.trim();
+    locationOverlay.style.display = 'none';
+    document.body.style.overflow = '';
+    if (userLocation){
+      searchEl.value = userLocation;
+      locationPill.textContent = `📍 ${userLocation}${t('changeLoc')}`;
+      locationPill.style.display = 'inline-block';
+    }else{
+      locationPill.style.display = 'none';
+    }
+    render();
+  }
+
+  document.getElementById('jb-location-go').addEventListener('click', () => {
+    applyUserLocation(locationInput.value);
+  });
+  document.getElementById('jb-location-skip').addEventListener('click', () => {
+    applyUserLocation('');
+  });
+  locationInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter'){ e.preventDefault(); applyUserLocation(locationInput.value); }
+  });
+  locationPill.addEventListener('click', () => {
+    locationInput.value = userLocation;
+    locationOverlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    locationInput.focus();
+  });
+
+  // ---- Pull-to-refresh (mobile touch gesture) ----
+  const ptrIndicator = document.getElementById('jb-ptr-indicator');
+  const ptrText = document.getElementById('jb-ptr-text');
+  const rootEl = document.getElementById('jb-root');
+  let ptrStartY = 0;
+  let ptrPulling = false;
+  let ptrTriggered = false;
+  const PTR_THRESHOLD = 70;
+
+  rootEl.addEventListener('touchstart', (e) => {
+    if (window.scrollY > 4) { ptrPulling = false; return; }
+    ptrStartY = e.touches[0].clientY;
+    ptrPulling = true;
+    ptrTriggered = false;
+  }, { passive: true });
+
+  rootEl.addEventListener('touchmove', (e) => {
+    if (!ptrPulling) return;
+    const diff = e.touches[0].clientY - ptrStartY;
+    if (diff > 12 && window.scrollY <= 4){
+      ptrIndicator.classList.add('jb-ptr-active');
+      ptrText.textContent = diff > PTR_THRESHOLD ? t('releaseToRefresh') : t('pullToRefresh');
+      ptrTriggered = diff > PTR_THRESHOLD;
+    }
+  }, { passive: true });
+
+  rootEl.addEventListener('touchend', async () => {
+    if (!ptrPulling) return;
+    ptrPulling = false;
+    if (ptrTriggered){
+      ptrText.textContent = t('refreshing');
+      await loadJobs(true);
+    }
+    ptrIndicator.classList.remove('jb-ptr-active');
+  });
+
+  applyStaticText();
+  document.body.style.overflow = 'hidden'; // locked while the location prompt is up
+  loadJobs();
+})();
+</script>
+
+</body>
+</html>
